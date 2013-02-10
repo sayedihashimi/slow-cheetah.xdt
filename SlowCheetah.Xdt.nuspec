@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SlowCheetah.Xdt</id>
-    <version>1.0-beta</version>
+    <version>1.1-beta</version>
     <authors>Sayed Ibrahim Hashimi</authors>
     <owners>Sayed Ibrahim Hashimi</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -14,7 +14,7 @@
     </description>
     <!--<releaseNotes></releaseNotes>-->
     <copyright>Copyright 2013 Sayed Ibrahim Hashimi</copyright>
-    <tags>XDT, web.config transform, transform, xml, web.config</tags>
+    <tags>XDT, web.config transform, transform, xml, web.config,SlowCheetah, Slow Cheetah, Visual Studio</tags>
     <!--<dependencies>
       <dependency id="SampleDependency" version="1.0" />
     </dependencies>-->
