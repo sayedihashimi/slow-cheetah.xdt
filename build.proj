@@ -1,5 +1,14 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="CreateNugetPackage">
-  <!-- This script will create the Nuget package -->
+
+  <!-- 
+  You can use this scrip to:
+    1. Create the SlowCheetah.Xdt NuGet package
+    2. Build out the samples so that you can view them
+    
+    #1: msbuild.exe build.proj
+    #2: msbuild.exe build.proj /t:BuildSamples
+  -->
+  
 
   <PropertyGroup>
     <SourceRoot Condition=" '$(SourceRoot)'=='' ">$(MSBuildProjectDirectory)\</SourceRoot>
@@ -8,7 +17,9 @@
     <PackageRoot Condition=" '$(PackageRoot)'=='' ">$(OutputRoot)Nugetpkg\</PackageRoot>
     <NugetExe Condition=" '$(NugetExe)'=='' ">$(SourceRoot)SlowCheetah.Xdt\.nuget\NuGet.exe</NugetExe>
     <NugetLocalRepo Condition=" '$(NugetLocalRepo)'=='' ">C:\Temp\Nuget\LocalRepo\</NugetLocalRepo>
-    <PackageDirectory Condition=" '$(PackageDirectory)'=='' ">_Package</PackageDirectory>    
+    <PackageDirectory Condition=" '$(PackageDirectory)'=='' ">_Package</PackageDirectory>
+    <CopyOutputToDevFolder Condition=" '$(CopyOutputToDevFolder)'=='' ">true</CopyOutputToDevFolder>
+    <DevFolder Condition=" '$(DevFolder)'=='' ">c:\temp\msbuild\</DevFolder>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -49,10 +60,12 @@
     <BuildProjectsDependsOn>
       $(BuildProjectsDependsOn);
       CleanAndInitalize;
+      CoreBuildProjects;
+      CopyOutputToDevFolder;
     </BuildProjectsDependsOn>
   </PropertyGroup>
-
-  <Target Name="BuildProjects" DependsOnTargets="@(BuildProjectsDependsOn)">
+  <Target Name="BuildProjects" DependsOnTargets="$(BuildProjectsDependsOn)"/>
+  <Target Name="CoreBuildProjects">
     <MSBuild Projects="@(ProjectsToBuild)"
              Properties="Configuration=$(Release);OutputPath=$(OutputRoot)"/>
   </Target>
@@ -93,6 +106,16 @@
           DestinationFiles="@(LibItems->'$(PackageRoot)lib\%(DestDir)%(Filename)%(Extension)')"/>
     
   </Target>
+
+  <Target Name="CopyOutputToDevFolder" Condition=" '$(CopyOutputToDevFolder)'=='true' " DependsOnTargets="CoreBuildProjects">
+    <ItemGroup>
+      <_FilesToCopy Remove="@(_FilesToCopy)"/>
+      <_FilesToCopy Include="$(OutputRoot)*.dll"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(_FilesToCopy)"
+          DestinationFiles="@(_FilesToCopy->'$(DevFolder)%(Filename)%(Extension)')"
+          Condition="Exists('$(DevFolder)')"/>
+  </Target>
   
   <Target Name="CleanAndInitalize">
     <MakeDir Directories="$(OutputRoot)"/>
@@ -111,10 +134,21 @@
     <Delete Files="@(_FilesToDelete)"/>
   </Target>
 
-  
-  
-  <Target Name="CreatePSModuleFromScript">
-    <!-- We need to read PublishPs1 for the start/end tags and remove all lines which are outside of that region -->
+  <UsingTask TaskName="SlowCheetah.Xdt.TransformXml" AssemblyFile="$(DevFolder)SlowCheetah.Xdt.dll" />
+  <Target Name="BuildSamples" DependsOnTargets="CopyOutputToDevFolder">
+    <PropertyGroup>
+      <_SourceFile>$(SourceRoot)SlowCheetah.Xdt\Samples\sample.config</_SourceFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <_Transforms Remove="@(_Transforms)"/>
+      <_Transforms Include="$(SourceRoot)SlowCheetah.Xdt\Samples\transform.*.config"/>
+    </ItemGroup>
+
+    <MakeDir Directories="$(DevFolder)TransformResults"/>
+
+    <SlowCheetah.Xdt.TransformXml Source="$(_SourceFile)"
+                                  Transform="%(_Transforms.FullPath)"
+                                  Destination="$(DevFolder)TransformResults\%(Filename)%(Extension)"/>
   </Target>
   
 </Project>
