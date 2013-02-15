@@ -31,7 +31,7 @@
     <ContentItems Include="$(SourceRoot)Lib\SlowCheetah.Tasks.dll">
       <DestDir>$(PackageDirectory)\</DestDir>
     </ContentItems>-->
-    <LibItems Include="$(OutputRoot)Microsoft.Web.XmlTransform.dll" />
+    <!--<LibItems Include="$(OutputRoot)Microsoft.Web.XmlTransform.dll" />-->
     <LibItems Include="$(OutputRoot)SlowCheetah.Xdt.dll" />
   </ItemGroup>
 
