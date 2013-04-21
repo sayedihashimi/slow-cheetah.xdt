@@ -20,6 +20,7 @@
     <PackageDirectory Condition=" '$(PackageDirectory)'=='' ">_Package</PackageDirectory>
     <CopyOutputToDevFolder Condition=" '$(CopyOutputToDevFolder)'=='' ">true</CopyOutputToDevFolder>
     <DevFolder Condition=" '$(DevFolder)'=='' ">c:\temp\msbuild\</DevFolder>
+    <RestorePackages Condition=" '$(RestorePackages)'=='' ">true</RestorePackages>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -67,7 +68,7 @@
   <Target Name="BuildProjects" DependsOnTargets="$(BuildProjectsDependsOn)"/>
   <Target Name="CoreBuildProjects">
     <MSBuild Projects="@(ProjectsToBuild)"
-             Properties="Configuration=$(Release);OutputPath=$(OutputRoot)"/>
+             Properties="Configuration=$(Release);OutputPath=$(OutputRoot);RestorePackages=$(RestorePackages);RequireRestoreConsent=false"/>
   </Target>
   <Target Name="CreateNugetPackage" DependsOnTargets="$(CreateNugetPackageDependsOn)" />
 
