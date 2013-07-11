@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="AttributeRegexReplace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleTransform.cs" />
     <Compile Include="TransformXml.cs" />
   </ItemGroup>
   <ItemGroup>
