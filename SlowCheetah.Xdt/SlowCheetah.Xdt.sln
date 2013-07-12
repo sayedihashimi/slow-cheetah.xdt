@@ -17,10 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{E693E105
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		BuildExe|Any CPU = BuildExe|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3908E406-3AF3-4431-B686-03BBE8E873EB}.BuildExe|Any CPU.ActiveCfg = BuildExe|Any CPU
+		{3908E406-3AF3-4431-B686-03BBE8E873EB}.BuildExe|Any CPU.Build.0 = BuildExe|Any CPU
 		{3908E406-3AF3-4431-B686-03BBE8E873EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3908E406-3AF3-4431-B686-03BBE8E873EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3908E406-3AF3-4431-B686-03BBE8E873EB}.Release|Any CPU.ActiveCfg = Release|Any CPU

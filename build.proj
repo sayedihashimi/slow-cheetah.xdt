@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectsToBuild Include="$(SourceRoot)SlowCheetah.Xdt\SlowCheetah.Xdt.csproj"/>
+    <SlowCheetahProj Include="$(SourceRoot)SlowCheetah.Xdt\SlowCheetah.Xdt.csproj"/>
   </ItemGroup>
   
   <PropertyGroup>
@@ -67,8 +67,10 @@
   </PropertyGroup>
   <Target Name="BuildProjects" DependsOnTargets="$(BuildProjectsDependsOn)"/>
   <Target Name="CoreBuildProjects">
-    <MSBuild Projects="@(ProjectsToBuild)"
-             Properties="Configuration=$(Release);OutputPath=$(OutputRoot);RestorePackages=$(RestorePackages);RequireRestoreConsent=false"/>
+    <MSBuild Projects="@(SlowCheetahProj)"
+             Properties="Configuration=$(Configuration);OutputPath=$(OutputRoot);RestorePackages=$(RestorePackages);RequireRestoreConsent=false"/>
+    <MSBuild Projects="@(SlowCheetahProj)"
+             Properties="Configuration=BuildExe;OutputPath=$(OutputRoot);RestorePackages=$(RestorePackages);RequireRestoreConsent=false"/>
   </Target>
   <Target Name="CreateNugetPackage" DependsOnTargets="$(CreateNugetPackageDependsOn)" />
 
