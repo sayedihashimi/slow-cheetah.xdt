@@ -19,12 +19,15 @@
             set;
         }
 
-
-        [Required]
         public ITaskItem Transform {
             get;
             set;
         }
+
+        /// <summary>
+        /// Either this is passed in or Transform is passed in. Not both.
+        /// </summary>
+        public string TransformText { get; set; }
 
         public string TransformRootPath {
             get {
@@ -38,6 +41,12 @@
             set { _transformRootPath = value; }
         }
 
+        /// <summary>
+        /// If this is set to true then the value for
+        /// Transform will be passed to document.LoadXml() instead of
+        /// document.Load()
+        /// </summary>
+        // public bool TransformProvidedAsText { get; set; }
 
         [Required]
         public ITaskItem Destination {
@@ -59,12 +68,27 @@
             XmlTransformation transformation = null;
             XmlTransformableDocument document = null;
 
+            // validate that both Transform and TransformString are not passed in
+            if (Transform != null && !string.IsNullOrEmpty(TransformText)) {
+                Log.LogError("Either Transform or TransformString should be passed in, not both.");
+                return false;
+            }
+
+            bool loadTransformFromFile = string.IsNullOrEmpty(TransformText);                     
+
             try {
                 Log.LogMessage(MessageImportance.Low, "Transfroming source file: {0}", Source);
+
                 document = OpenSourceFile(Source.GetMetadata("FullPath"));
 
-                Log.LogMessage(MessageImportance.Low, "Applying Transform File: {0}", Transform);
-                transformation = OpenTransformFile(Transform.GetMetadata("FullPath"), null);
+                if (loadTransformFromFile) {
+                    Log.LogMessage(MessageImportance.Low, "Applying Transform File: {0}", Transform);
+                    transformation = OpenTransformFile(Transform.GetMetadata("FullPath"), null);
+                }
+                else {
+                    Log.LogMessage(MessageImportance.Low, "Applying Transform from TransformText");
+                    transformation = OpenTransformText(TransformText, null);
+                }
 
                 succeeded = transformation.Apply(document);
 
@@ -110,13 +134,13 @@
                 throw new Exception(string.Format("Could not write Destination file: {0}", ex.Message), ex);
             }
         }
-
-        private XmlTransformableDocument OpenSourceFile(string sourceFile) {
+        
+        private XmlTransformableDocument OpenSourceFile(string transform) {
             try {
                 XmlTransformableDocument document = new XmlTransformableDocument();
 
                 document.PreserveWhitespace = true;
-                document.Load(sourceFile);
+                document.Load(transform);
 
                 return document;
             }
@@ -134,6 +158,21 @@
         private XmlTransformation OpenTransformFile(string transformFile, IXmlTransformationLogger logger) {
             try {
                 return new XmlTransformation(transformFile, logger);
+            }
+            catch (System.Xml.XmlException) {
+                throw;
+            }
+            catch (Exception ex) {
+                throw new Exception(
+                    string.Format(System.Globalization.CultureInfo.CurrentCulture,
+                    "Could not open Transform file: {0}", ex.Message),
+                    ex);
+            }
+        }
+
+        private XmlTransformation OpenTransformText(string transforText, IXmlTransformationLogger logger) {
+            try {
+                return new XmlTransformation(TransformText, false, logger);
             }
             catch (System.Xml.XmlException) {
                 throw;
