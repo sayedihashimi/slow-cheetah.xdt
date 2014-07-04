@@ -170,9 +170,12 @@
             }
         }
 
-        private XmlTransformation OpenTransformText(string transforText, IXmlTransformationLogger logger) {
+        private XmlTransformation OpenTransformText(string transformText, IXmlTransformationLogger logger) {
             try {
-                return new XmlTransformation(TransformText, false, logger);
+                if (string.IsNullOrEmpty(transformText)) { throw new ArgumentNullException("transformText"); }
+
+                transformText = transformText.Trim();
+                return new XmlTransformation(transformText, false, logger);
             }
             catch (System.Xml.XmlException) {
                 throw;
