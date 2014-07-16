@@ -45,6 +45,8 @@
     </ContentItems>-->
     <!--<LibItems Include="$(OutputRoot)Microsoft.Web.XmlTransform.dll" />-->
     <LibItems Include="$(OutputRoot)SlowCheetah.Xdt.dll" />
+
+    <ToolsItems Include="$(OutputRoot)SlowCheetah.Xdt.exe" />
   </ItemGroup>
 
   <ItemGroup>
