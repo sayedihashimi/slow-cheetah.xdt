@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'BuildExe|AnyCPU'">
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <OutputPath>bin\BuildExe\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
