@@ -37,8 +37,8 @@ namespace SlowCheetah.Xdt {
                         string.Format("\nSaved transformation at '{0}'\n\n",
                         new FileInfo(destFile).FullName));
 
-                    Console.WriteLine("Press enter to continue");
-                    Console.ReadLine();
+                    // Console.WriteLine("Press enter to continue");
+                    // Console.ReadLine();
 
                     int exitCode = (success == true) ? 0 : 1;
                     Environment.Exit(exitCode);
