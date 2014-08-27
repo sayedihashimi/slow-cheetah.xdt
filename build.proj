@@ -63,18 +63,29 @@
     <BuildProjectsDependsOn>
       $(BuildProjectsDependsOn);
       CleanAndInitalize;
+      GetNugetPackages;
       CoreBuildProjects;
       CopyOutputToDevFolder;
     </BuildProjectsDependsOn>
   </PropertyGroup>
   <Target Name="BuildProjects" DependsOnTargets="$(BuildProjectsDependsOn)"/>
   <Target Name="CoreBuildProjects">
+
     <MSBuild Projects="@(SlowCheetahProj)"
-             Properties="Configuration=$(Configuration);OutputPath=$(OutputRoot);RestorePackages=$(RestorePackages);RequireRestoreConsent=false"/>
+             Properties="Configuration=Release; Platform=AnyCPU;OutputPath=$(OutputRoot)"/>
     <MSBuild Projects="@(SlowCheetahProj)"
-             Properties="Configuration=BuildExe;OutputPath=$(OutputRoot);RestorePackages=$(RestorePackages);RequireRestoreConsent=false"/>
+             Properties="Configuration=BuildExe; Platform=AnyCPU;OutputPath=$(OutputRoot)"/>
   </Target>
   <Target Name="CreateNugetPackage" DependsOnTargets="$(CreateNugetPackageDependsOn)" />
+
+  <Target Name="GetNugetPackages">
+    <PropertyGroup>
+      <_Cmd>"$(NugetExe)" restore "$(SourceRoot)SlowCheetah.Xdt" </_Cmd>
+    </PropertyGroup>
+
+    <Message Text="_Cmd: $(_Cmd)" Importance="low" />
+    <Exec Command="$(_Cmd)"/>
+  </Target>
 
   <Target Name="CoreCreateNugetPackage">
     <!-- nuget pack "C:\...\SlowCheetah.Xdt.nuspec" -NoPackageAnalysis -OutputDirectory "C:\...\Output\" -->
