@@ -51,9 +51,6 @@ namespace SlowCheetah.Xdt {
             sb.AppendLine("\n\nIncorrect set of arguments");
             sb.AppendLine("\tXdtSample.exe sourceXmlFile transformFile destFile\n\n");
             System.Console.Write(sb.ToString());
-
-            Console.WriteLine("Press enter to continue");
-            Console.ReadLine();
         }
     }
 }
